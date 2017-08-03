@@ -6,10 +6,8 @@
  * and open the template in the editor.
  */
 
-class usercontroller{
-    
-    public function profile(){
-         echo "This is profile action in usercontroller";
-    }
-    
-}
+
+return array(
+    'defaultController'=>'site',
+    'defaultAction'=>'index',
+);

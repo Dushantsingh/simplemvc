@@ -9,16 +9,14 @@ class mvc{
     
     public $controller;
     
-    protected $_controllerNameName;
+    protected $_controllerName;
     protected $_actionName;
-    protected $_routes = array();
     protected $_urlFragment = array();
-    protected $_pathInfo;
+    protected $_config;
     
     
-    public function __construct(){
-        $this->_controllerName = 'site';
-        $this->_actionName = 'index';
+    public function __construct($config = NULL){
+        $this->_config = $config;
     }
     
     public function run(){
@@ -37,26 +35,26 @@ class mvc{
     }
     
     public function urlFragments(){
-        $this->_pathInfo= !empty($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] :
+        $pathInfo = !empty($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] :
 	    (!empty($_SERVER['ORIG_PATH_INFO']) ? $_SERVER['ORIG_PATH_INFO'] : '');
-        $this->_urlFragment = !empty($this->_pathInfo) ? array_filter(explode('/',$this->_pathInfo)) : null;
+        $this->_urlFragment = !empty($pathInfo) ? array_filter(explode('/',$pathInfo)) : null;
     }
     
     public function setController(){
-        isset($this->_urlFragment)?$this->_controllerName = $this->_urlFragment[1]:$this->_controllerName = 'site';
+        isset($this->_urlFragment)?$this->_controllerName = $this->_urlFragment[1]:$this->_controllerName = $this->_config['defaultController'];
     }
     
     public function setAction(){
-        isset($this->_urlFragment)?(isset($this->_urlFragment[2])?$this->_actionName = $this->_urlFragment[2]:$this->_actionName='index'):$this->_controllerName = 'site';
+        isset($this->_urlFragment)?(isset($this->_urlFragment[2])?$this->_actionName = $this->_urlFragment[2]:$this->_actionName=$this->_config['defaultAction']):$this->_actionName = $this->_config['defaultAction'];
     }
     
     public function runControllerAction(){
         
         /*require Controller file*/
-        $controllerFile = $this->_controllerName.'controller.php';
+        $controllerFile = $this->_controllerName.'Controller.php';
         require_once('app/controllers/'.$controllerFile);
         
-        $controllerclass = $this->_controllerName.'controller';
+        $controllerclass = $this->_controllerName.'Controller';
         $this->controller = new $controllerclass();
         $this->controller->{$this->_actionName}();
     }
