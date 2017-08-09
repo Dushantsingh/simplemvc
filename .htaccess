@@ -43,7 +43,7 @@ RewriteRule [A-Z] - [N]
 
 RewriteCond %{ENV:HASCAPS} TRUE
 
-RewriteRule ^/?(.*) http://localhost.simplemvc.com/$1 [R=301,L]
+
 
 
 #remove trailing '/'
